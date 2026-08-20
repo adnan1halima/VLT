@@ -1,1 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VLT — Engineered to Outperform</title>
+<style>
+  :root{
+    --bg:#08090a;
+    --bg-panel:#0c0d0f;
+    --line:rgba(255,255,255,.12);
+    --line-soft:rgba(255,255,255,.07);
+    --text:#f4f4f2;
+    --text-dim:#9a9c9f;
+    --text-faint:#5a5c5f;
+    --accent-blue:#5fb8e8;
+    --white:#ffffff;
+    --ff-display: 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+    --ff-body: 'Helvetica Neue', Arial, sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--ff-body);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 40px;}
+  @media(max-width:768px){.wrap{padding:0 20px;}}
 
+  ::selection{background:var(--accent-blue);color:#000;}
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    background:rgba(8,9,10,.72);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line-soft);
+    transition:background .3s ease;
+  }
+  .nav-inner{
+    max-width:1240px;margin:0 auto;padding:0 40px;
+    height:74px;display:flex;align-items:center;justify-content:space-between;
+  }
+  @media(max-width:768px){.nav-inner{padding:0 20px;height:64px;}}
+
+  .logo-mark{
+    font-family:var(--ff-display);
+    font-weight:800;
+    font-size:26px;
+    letter-spacing:1px;
+    display:flex;align-items:center;gap:2px;
+    font-style:italic;
+    transform:skewX(-6deg);
+  }
+  .logo-mark span.slash{color:var(--accent-blue);}
+
+  nav.links{display:flex;gap:44px;}
+  nav.links a{
+    font-size:12px;letter-spacing:1.6px;text-transform:uppercase;
+    color:var(--text-dim);
+    position:relative;padding:6px 0;
+    transition:color .25s ease;
+  }
+  nav.links a::after{
+    content:'';position:absolute;left:0;bottom:0;width:0;height:1px;
+    background:var(--white);transition:width .3s ease;
+  }
+  nav.links a:hover{color:var(--white);}
+  nav.links a:hover::after{width:100%;}
+  @media(max-width:900px){nav.links{display:none;}}
+
+  .nav-right{display:flex;align-items:center;gap:28px;}
+  .cart-btn{
+    font-size:12px;letter-spacing:1.4px;text-transform:uppercase;
+    color:var(--text-dim);transition:color .25s ease;
+    display:flex;align-items:center;gap:6px;
+  }
+  .cart-btn:hover{color:var(--white);}
+  .burger{
+    width:22px;height:14px;position:relative;display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .burger span{display:block;height:1px;background:var(--text-dim);width:100%;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:100svh;
+    display:flex;align-items:center;
+    padding-top:74px;
+    background:
+      radial-gradient(ellipse 900px 500px at 78% 55%, rgba(70,120,160,.28), transparent 60%),
+      radial-gradient(ellipse 700px 900px at 20% 20%, rgba(255,255,255,.04), transparent 55%),
+      linear-gradient(180deg,#050607 0%,#08090b 55%,#050607 100%);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(ellipse 800px 500px at 65% 50%, black, transparent 70%);
+    pointer-events:none;
+  }
+  .hero-inner{
+    position:relative;z-index:2;
+    display:grid;grid-template-columns:1fr 1.15fr;gap:20px;
+    align-items:center;width:100%;
+    padding:60px 0;
+  }
+  @media(max-width:980px){.hero-inner{grid-template-columns:1fr;gap:48px;padding:40px 0 60px;}}
+
+  .hero-rail{
+    position:absolute;left:40px;top:50%;transform:translateY(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:18px;
+    font-size:11px;color:var(--text-faint);letter-spacing:1px;z-index:3;
+  }
+  @media(max-width:980px){.hero-rail{display:none;}}
+  .hero-rail .rail-line{width:1px;height:60px;background:var(--line);}
+  .hero-rail .active{color:var(--white);}
+
+  .hero-copy{padding-left:56px;}
+  @media(max-width:980px){.hero-copy{padding-left:0;}}
+  .eyebrow-num{
+    font-size:11px;color:var(--text-faint);letter-spacing:2px;margin-bottom:18px;
+  }
+  h1.hero-title{
+    font-family:var(--ff-display);
+    font-weight:800;
+    font-style:italic;
+    text-transform:uppercase;
+    font-size:clamp(38px,5.4vw,64px);
+    line-height:.96;
+    letter-spacing:.5px;
+    transform:skewX(-2deg);
+    margin-bottom:24px;
+  }
+  .hero-sub{
+    font-size:14px;color:var(--text-dim);letter-spacing:.5px;max-width:360px;margin-bottom:36px;
+    line-height:1.6;
+  }
+  .hero-actions{display:flex;align-items:center;gap:28px;flex-wrap:wrap;}
+
+  .btn-solid{
+    background:var(--white);color:#0a0a0a;
+    padding:15px 28px;font-size:12px;letter-spacing:1.6px;text-transform:uppercase;
+    font-weight:600;
+    display:inline-flex;align-items:center;gap:10px;
+    transition:transform .25s ease, background .25s ease;
+  }
+  .btn-solid:hover{transform:translateY(-2px);background:#e4e4e4;}
+  .btn-ghost-play{
+    display:inline-flex;align-items:center;gap:12px;
+    font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-dim);
+    transition:color .25s ease;
+  }
+  .btn-ghost-play:hover{color:var(--white);}
+  .play-circle{
+    width:34px;height:34px;border-radius:50%;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    transition:border-color .25s ease, transform .25s ease;
+  }
+  .btn-ghost-play:hover .play-circle{border-color:var(--white);transform:scale(1.08);}
+
+  .hero-stage{
+    position:relative;
+    display:flex;align-items:center;justify-content:center;
+    min-height:420px;
+  }
+  .stage-glow{
+    position:absolute;width:70%;height:60%;
+    background:radial-gradient(ellipse, rgba(95,184,232,.22), transparent 70%);
+    filter:blur(10px);
+    top:50%;left:52%;transform:translate(-50%,-50%);
+  }
+  .product-frame{
+    position:relative;width:100%;max-width:560px;
+    aspect-ratio:16/11;
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid var(--line-soft);
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 60%, rgba(255,255,255,.05), transparent 70%),
+      linear-gradient(160deg, rgba(255,255,255,.03), transparent 40%);
+    overflow:hidden;
+  }
+  .product-frame::after{
+    content:'';position:absolute;bottom:0;left:10%;right:10%;height:40%;
+    background:radial-gradient(ellipse, rgba(95,184,232,.15), transparent 70%);
+    filter:blur(18px);
+  }
+  .stage-content{position:relative;z-index:2;text-align:center;padding:30px;}
+  .stage-mark{
+    font-family:var(--ff-display);font-weight:800;font-style:italic;
+    font-size:15vw;max-width:160px;margin:0 auto 14px;
+    color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.35);
+    letter-spacing:2px;transform:skewX(-6deg);
+  }
+  .stage-note{
+    font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);
+  }
+  .hero-caption{
+    position:absolute;bottom:0;right:0;display:flex;align-items:center;gap:10px;
+    font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);
+  }
+  .hero-caption .dash{width:26px;height:1px;background:var(--line);}
+  @media(max-width:980px){.hero-caption{position:static;margin-top:18px;justify-content:flex-end;width:100%;}}
+
+  /* ---------- SECTION SHELL ---------- */
+  section{position:relative;}
+  .fade-up{opacity:0;transform:translateY(28px);transition:opacity .8s ease, transform .8s ease;}
+  .fade-up.in{opacity:1;transform:none;}
+
+  /* ---------- PRODUCT ---------- */
+  .product-section{
+    padding:110px 0 100px;
+    border-top:1px solid var(--line-soft);
+    background:linear-gradient(180deg,#060708,#08090a);
+  }
+  .product-grid{
+    display:grid;grid-template-columns:110px 1fr 1fr;gap:26px;
+  }
+  @media(max-width:980px){.product-grid{grid-template-columns:1fr;}}
+
+  .thumb-col{display:flex;flex-direction:column;gap:14px;}
+  @media(max-width:980px){.thumb-col{flex-direction:row;order:2;overflow-x:auto;}}
+  .thumb{
+    aspect-ratio:1/1;border:1px solid var(--line-soft);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;overflow:hidden;flex-shrink:0;
+    background:radial-gradient(ellipse at center, rgba(255,255,255,.045), transparent 70%);
+    transition:border-color .25s ease;
+  }
+  @media(max-width:980px){.thumb{width:76px;}}
+  .thumb.active{border-color:var(--white);}
+  .thumb:hover{border-color:rgba(255,255,255,.4);}
+  .thumb-icon{width:60%;opacity:.5;}
+  .thumb-img{width:100%;height:100%;object-fit:cover;object-position:center;}
+
+  .hero-shot{
+    position:relative;z-index:2;width:100%;height:100%;object-fit:contain;
+    filter:drop-shadow(0 30px 40px rgba(0,0,0,.6));
+    padding:24px;
+  }
+  .main-shot-img{
+    position:relative;z-index:2;width:100%;height:100%;object-fit:contain;
+    filter:drop-shadow(0 24px 34px rgba(0,0,0,.6));
+    padding:20px;
+  }
+
+  .main-shot{
+    border:1px solid var(--line-soft);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;overflow:hidden;min-height:460px;
+    background:
+      radial-gradient(ellipse 70% 55% at 50% 62%, rgba(255,255,255,.05), transparent 70%),
+      linear-gradient(160deg, rgba(255,255,255,.025), transparent 45%);
+  }
+  @media(max-width:980px){.main-shot{order:1;min-height:340px;}}
+  .main-shot::after{
+    content:'';position:absolute;bottom:6%;left:12%;right:12%;height:34%;
+    background:radial-gradient(ellipse, rgba(95,184,232,.14), transparent 72%);
+    filter:blur(16px);
+  }
+  .main-shot .stage-content{max-width:340px;}
+  .main-shot .stage-mark{max-width:220px;font-size:80px;}
+
+  .product-info{padding-top:6px;}
+  @media(max-width:980px){.product-info{order:3;}}
+  .tag-new{
+    display:inline-block;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--accent-blue);margin-bottom:14px;
+  }
+  h2.product-name{
+    font-family:var(--ff-display);font-weight:800;font-style:italic;
+    text-transform:uppercase;font-size:clamp(30px,3.4vw,44px);letter-spacing:.5px;
+    transform:skewX(-2deg);margin-bottom:8px;
+  }
+  .product-variant{font-size:13px;color:var(--text-dim);margin-bottom:22px;letter-spacing:.3px;}
+  .product-price{
+    position:absolute;top:0;right:0;font-size:20px;font-weight:600;letter-spacing:.5px;
+  }
+  .price-row{display:flex;justify-content:space-between;align-items:flex-start;position:relative;}
+  .product-desc{
+    font-size:14px;line-height:1.75;color:var(--text-dim);max-width:420px;margin-bottom:30px;
+  }
+  .hr{height:1px;background:var(--line-soft);margin:26px 0;}
+
+  .select-label{
+    font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px;
+  }
+  .color-row{display:flex;gap:12px;margin-bottom:30px;}
+  .swatch{
+    width:26px;height:26px;border-radius:50%;cursor:pointer;
+    border:2px solid transparent;position:relative;
+    transition:transform .2s ease;
+  }
+  .swatch::before{content:'';position:absolute;inset:3px;border-radius:50%;}
+  .swatch.sel{border-color:var(--white);}
+  .swatch:hover{transform:scale(1.1);}
+  .sw-blue::before{background:#3a6ea8;}
+  .sw-gray::before{background:#6b6d70;}
+  .sw-white::before{background:#e9e9e9;}
+  .sw-red::before{background:#8c2a2a;}
+  .sw-olive::before{background:#7a7d5c;}
+
+  .size-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px;}
+  .size-btn{
+    min-width:46px;height:44px;padding:0 10px;
+    border:1px solid var(--line);
+    font-size:13px;letter-spacing:.3px;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text-dim);
+    transition:all .2s ease;
+  }
+  .size-btn:hover{border-color:rgba(255,255,255,.5);color:var(--white);}
+  .size-btn.sel{background:var(--white);color:#0a0a0a;border-color:var(--white);font-weight:600;}
+
+  .action-row{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn-block{
+    flex:1;min-width:170px;padding:17px 20px;text-align:center;
+    font-size:12px;letter-spacing:1.6px;text-transform:uppercase;font-weight:600;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    transition:transform .2s ease, opacity .2s ease;
+  }
+  .btn-add{background:var(--white);color:#0a0a0a;}
+  .btn-add:hover{transform:translateY(-2px);}
+  .btn-buy{border:1px solid var(--line);color:var(--white);}
+  .btn-buy:hover{border-color:var(--white);background:rgba(255,255,255,.05);}
+  .btn-block:active{transform:scale(.97);}
+  .btn-add.added{background:var(--accent-blue);color:#04121a;}
+
+  /* ---------- FEATURES ---------- */
+  .features{
+    padding:80px 0;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);
+    background:#07080a;
+  }
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);}
+  @media(max-width:820px){.feat-grid{grid-template-columns:1fr;gap:44px;}}
+  .feat{padding:0 36px;position:relative;}
+  .feat:not(:first-child){border-left:1px solid var(--line-soft);}
+  @media(max-width:820px){.feat{padding:0;border-left:none !important;}}
+  .feat-icon{width:34px;height:34px;margin-bottom:22px;opacity:.85;}
+  .feat h3{
+    font-size:15px;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:12px;font-weight:700;
+  }
+  .feat p{font-size:13.5px;color:var(--text-dim);line-height:1.7;max-width:280px;margin-bottom:18px;}
+  .feat a{
+    font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-faint);
+    display:inline-flex;align-items:center;gap:8px;transition:all .25s ease;
+  }
+  .feat a:hover{color:var(--white);gap:12px;}
+
+  /* ---------- STORY ---------- */
+  .story{
+    position:relative;min-height:520px;display:flex;align-items:center;
+    background:
+      radial-gradient(ellipse 700px 500px at 25% 40%, rgba(70,110,150,.16), transparent 65%),
+      linear-gradient(115deg,#050608 0%,#0a0d10 45%,#08090b 100%);
+    overflow:hidden;border-bottom:1px solid var(--line-soft);
+  }
+  .story::before{
+    content:'';position:absolute;left:6%;top:0;bottom:0;width:2px;
+    background:linear-gradient(180deg, transparent, rgba(95,184,232,.55), transparent);
+    filter:blur(1px);
+  }
+  .story-figure{
+    position:absolute;left:0;bottom:0;width:42%;height:100%;
+    background:
+      radial-gradient(ellipse 60% 50% at 40% 100%, rgba(0,0,0,.9), transparent 70%),
+      linear-gradient(0deg, rgba(0,0,0,.5), transparent 60%);
+    opacity:.9;
+  }
+  @media(max-width:900px){.story-figure{display:none;}}
+  .story-inner{position:relative;z-index:2;padding:90px 0;width:100%;}
+  .story-content{max-width:520px;margin-left:auto;padding-right:20px;}
+  @media(max-width:900px){.story-content{margin:0;max-width:100%;}}
+  .story-mark{
+    font-family:var(--ff-display);font-weight:800;font-style:italic;
+    font-size:clamp(34px,4.6vw,52px);letter-spacing:1px;transform:skewX(-2deg);
+    margin-bottom:6px;
+  }
+  .story-sub{
+    font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);margin-bottom:28px;
+  }
+  .story-content p{font-size:14.5px;line-height:1.8;color:var(--text-dim);max-width:400px;margin-bottom:26px;}
+  .story-link{
+    font-size:12px;letter-spacing:1.6px;text-transform:uppercase;
+    display:inline-flex;align-items:center;gap:10px;color:var(--white);
+    border-bottom:1px solid var(--line);padding-bottom:6px;transition:gap .25s ease, border-color .25s ease;
+  }
+  .story-link:hover{gap:16px;border-color:var(--white);}
+
+  /* ---------- NEWSLETTER + FOOTER ---------- */
+  footer{background:#050506;padding-top:70px;}
+  .news-row{
+    display:flex;justify-content:space-between;align-items:flex-end;gap:40px;
+    padding-bottom:60px;border-bottom:1px solid var(--line-soft);flex-wrap:wrap;
+  }
+  .news-copy h3{
+    font-size:16px;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:10px;font-weight:700;
+  }
+  .news-copy p{font-size:13.5px;color:var(--text-dim);max-width:300px;line-height:1.6;}
+  .news-form{display:flex;border-bottom:1px solid var(--line);min-width:320px;padding-bottom:10px;}
+  @media(max-width:600px){.news-form{min-width:100%;}}
+  .news-form input{
+    background:transparent;border:none;color:var(--white);font-size:13px;flex:1;outline:none;letter-spacing:.3px;
+  }
+  .news-form input::placeholder{color:var(--text-faint);}
+  .news-form button{color:var(--text-dim);transition:color .2s ease, transform .2s ease;}
+  .news-form button:hover{color:var(--white);transform:translateX(3px);}
+
+  .foot-mid{
+    display:flex;justify-content:space-between;align-items:center;padding:50px 0;flex-wrap:wrap;gap:30px;
+  }
+  .foot-logo{font-family:var(--ff-display);font-weight:800;font-style:italic;font-size:26px;letter-spacing:1px;transform:skewX(-6deg);}
+  .foot-social{display:flex;flex-direction:column;align-items:flex-end;gap:14px;}
+  @media(max-width:600px){.foot-social{align-items:center;}.foot-mid{flex-direction:column;text-align:center;}}
+  .foot-social span{font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-faint);}
+  .social-icons{display:flex;gap:20px;}
+  .social-icons a{color:var(--text-dim);transition:color .2s ease, transform .2s ease;}
+  .social-icons a:hover{color:var(--white);transform:translateY(-2px);}
+
+  .foot-bottom{
+    border-top:1px solid var(--line-soft);padding:26px 0 30px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+  }
+  .foot-bottom p{font-size:11.5px;color:var(--text-faint);}
+  .foot-links{display:flex;gap:26px;flex-wrap:wrap;}
+  .foot-links a{font-size:11.5px;color:var(--text-faint);transition:color .2s ease;}
+  .foot-links a:hover{color:var(--white);}
+
+  .dev-credit{
+    text-align:center;padding:18px 0 6px;
+    font-size:10.5px;letter-spacing:1px;color:var(--text-faint);
+  }
+
+  /* toast */
+  .toast{
+    position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--white);color:#0a0a0a;padding:14px 26px;font-size:12.5px;letter-spacing:.5px;
+    opacity:0;pointer-events:none;transition:opacity .3s ease, transform .3s ease;z-index:2000;
+    font-weight:600;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="logo-mark">VLT</a>
+    <nav class="links">
+      <a href="#product">Collection</a>
+      <a href="#tech">Technology</a>
+      <a href="#story">Story</a>
+      <a href="#access">Access</a>
+    </nav>
+    <div class="nav-right">
+      <a href="#cart" class="cart-btn">Cart (<span id="cart-count">0</span>)</a>
+      <div class="burger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-rail">
+    <span class="active">01</span>
+    <div class="rail-line"></div>
+    <span>02</span>
+    <div class="rail-line"></div>
+    <span>03</span>
+  </div>
+
+  <div class="wrap hero-inner">
+    <div class="hero-copy fade-up">
+      <div class="eyebrow-num">Autumn Drop — 01</div>
+      <h1 class="hero-title">Engineered<br>to Outperform</h1>
+      <p class="hero-sub">Performance footwear for the next generation.</p>
+      <div class="hero-actions">
+        <a href="#product" class="btn-solid">Explore Collection →</a>
+        <a href="#" class="btn-ghost-play">
+          <span class="play-circle">▶</span> Watch Film
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-stage fade-up">
+      <div class="stage-glow"></div>
+      <div class="product-frame">
+        <img src="images/velocity-x1.jpg" alt="VLT Velocity X1 — Black / Graphite" class="hero-shot">
+      </div>
+      <div class="hero-caption"><div class="dash"></div>VLT Velocity X1</div>
+    </div>
+  </div>
+</section>
+
+<section class="product-section" id="product">
+  <div class="wrap">
+    <div class="product-grid">
+      <div class="thumb-col fade-up">
+        <div class="thumb active"><img src="images/velocity-x1.jpg" alt="Velocity X1 thumbnail" class="thumb-img"></div>
+        <div class="thumb"><span class="thumb-icon">▽</span></div>
+        <div class="thumb"><span class="thumb-icon">◈</span></div>
+        <div class="thumb"><span class="thumb-icon">◎</span></div>
+      </div>
+
+      <div class="main-shot fade-up">
+        <img src="images/velocity-x1.jpg" alt="VLT Velocity X1 — Black / Graphite side profile" class="main-shot-img">
+      </div>
+
+      <div class="product-info fade-up">
+        <div class="price-row">
+          <div>
+            <div class="tag-new">New Drop</div>
+            <h2 class="product-name">Velocity X1</h2>
+            <div class="product-variant">Black / Graphite</div>
+          </div>
+          <div class="product-price">$189.00</div>
+        </div>
+
+        <p class="product-desc">Built for speed. Designed for dominance. The Velocity X1 combines cutting-edge engineering with lightweight performance for athletes who never slow down.</p>
+        <div class="hr"></div>
+
+        <div class="select-label">Select Color</div>
+        <div class="color-row" id="color-row">
+          <span class="swatch sw-blue sel" data-color="Black / Graphite"></span>
+          <span class="swatch sw-gray" data-color="Gunmetal"></span>
+          <span class="swatch sw-white" data-color="Arctic White"></span>
+          <span class="swatch sw-red" data-color="Crimson"></span>
+          <span class="swatch sw-olive" data-color="Olive Drab"></span>
+        </div>
+
+        <div class="select-label">Select Size</div>
+        <div class="size-row" id="size-row">
+          <div class="size-btn">7</div><div class="size-btn">7.5</div><div class="size-btn">8</div>
+          <div class="size-btn">8.5</div><div class="size-btn sel">9</div><div class="size-btn">9.5</div>
+          <div class="size-btn">10</div><div class="size-btn">10.5</div><div class="size-btn">11</div>
+          <div class="size-btn">12</div>
+        </div>
+
+        <div class="action-row">
+          <button class="btn-block btn-add" id="add-btn">Add to Cart 🛒</button>
+          <button class="btn-block btn-buy" id="buy-btn">Buy Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="tech">
+  <div class="wrap feat-grid">
+    <div class="feat fade-up">
+      <svg class="feat-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 4 L34 20 L20 36 L6 20 Z"/><path d="M20 12 L28 20 L20 28 L12 20 Z"/></svg>
+      <h3>Lightspeed Foam</h3>
+      <p>Ultra-light midsole delivers explosive energy return with every step.</p>
+      <a href="#">Learn More →</a>
+    </div>
+    <div class="feat fade-up">
+      <svg class="feat-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 14 L20 6 L34 14 L20 22 Z"/><path d="M6 22 L20 30 L34 22"/><path d="M6 14 V22"/><path d="M34 14 V22"/></svg>
+      <h3>Carbon Plate</h3>
+      <p>Full-length carbon fiber plate for maximum propulsion and stability.</p>
+      <a href="#">Learn More →</a>
+    </div>
+    <div class="feat fade-up">
+      <svg class="feat-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M10 30 V14 M10 14 L14 10 M10 14 L6 10"/><path d="M30 10 V26 M30 26 L34 22 M30 26 L26 22"/><path d="M18 6 V34" stroke-dasharray="2 3"/></svg>
+      <h3>Breathable Upper</h3>
+      <p>Engineered mesh adapts to your foot for locked-in comfort.</p>
+      <a href="#">Learn More →</a>
+    </div>
+  </div>
+</section>
+
+<section class="story" id="story">
+  <div class="story-figure"></div>
+  <div class="wrap story-inner">
+    <div class="story-content fade-up">
+      <div class="story-mark">VLT</div>
+      <div class="story-sub">Built Different</div>
+      <p>VLT is more than footwear. It's a mindset. We exist to push limits, break barriers, and redefine what's possible.</p>
+      <a href="#" class="story-link">Discover Our Story →</a>
+    </div>
+  </div>
+</section>
+
+<footer id="access">
+  <div class="wrap">
+    <div class="news-row fade-up">
+      <div class="news-copy">
+        <h3>Join the Movement</h3>
+        <p>Be first in line for drops, stories, and exclusive access.</p>
+      </div>
+      <form class="news-form" id="news-form">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit">→</button>
+      </form>
+    </div>
+
+    <div class="foot-mid">
+      <div class="foot-logo">VLT</div>
+      <div class="foot-social">
+        <span>Follow VLT</span>
+        <div class="social-icons">
+          <a href="#" aria-label="Instagram">◐</a>
+          <a href="#" aria-label="TikTok">♪</a>
+          <a href="#" aria-label="YouTube">▶</a>
+          <a href="#" aria-label="X">✕</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot-bottom">
+      <p>© 2024 VLT. All Rights Reserved.</p>
+      <div class="foot-links">
+        <a href="#">Terms</a><a href="#">Privacy</a><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="dev-credit">Developed & Designed by adnan.halima</div>
+  </div>
+</footer>
+
+<div class="toast" id="toast">Added to cart</div>
+
+<script>
+  // Color select
+  document.querySelectorAll('#color-row .swatch').forEach(sw=>{
+    sw.addEventListener('click',()=>{
+      document.querySelectorAll('#color-row .swatch').forEach(s=>s.classList.remove('sel'));
+      sw.classList.add('sel');
+      document.querySelector('.product-variant').textContent = sw.dataset.color;
+    });
+  });
+
+  // Size select
+  document.querySelectorAll('#size-row .size-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('#size-row .size-btn').forEach(b=>b.classList.remove('sel'));
+      btn.classList.add('sel');
+    });
+  });
+
+  // Cart
+  let cartCount = 0;
+  const cartCountEl = document.getElementById('cart-count');
+  const toast = document.getElementById('toast');
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(window._t);
+    window._t = setTimeout(()=>toast.classList.remove('show'), 2200);
+  }
+  document.getElementById('add-btn').addEventListener('click', function(){
+    cartCount++;
+    cartCountEl.textContent = cartCount;
+    showToast('Added to cart');
+    this.classList.add('added');
+    this.textContent = 'Added ✓';
+    setTimeout(()=>{ this.classList.remove('added'); this.textContent='Add to Cart 🛒'; }, 1400);
+  });
+  document.getElementById('buy-btn').addEventListener('click', function(){
+    showToast('Redirecting to checkout…');
+  });
+
+  // Newsletter
+  document.getElementById('news-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    showToast('You\'re on the list');
+    this.reset();
+  });
+
+  // Thumb select
+  document.querySelectorAll('.thumb').forEach(t=>{
+    t.addEventListener('click',()=>{
+      document.querySelectorAll('.thumb').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+    });
+  });
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  },{threshold:.15});
+  document.querySelectorAll('.fade-up').forEach(el=>io.observe(el));
+
+  // Nav bg on scroll
+  const navEl = document.querySelector('header.nav');
+  window.addEventListener('scroll', ()=>{
+    navEl.style.background = window.scrollY > 40 ? 'rgba(8,9,10,.92)' : 'rgba(8,9,10,.72)';
+  });
+</script>
+
+</body>
+</html>
